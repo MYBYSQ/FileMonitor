@@ -25,13 +25,13 @@ namespace FileMonitor
     public partial class MainWindow : Window 
     {
         private SourcePath Path  = new SourcePath();
-        private ObservableCollection<ChangeInfo> ChangeInfoList = new ObservableCollection<ChangeInfo>();
+        public ObservableCollection<ChangeInfo> ChangeInfoList { get; set; } = new ObservableCollection<ChangeInfo>();
         private ChangeMonitor _monitor = null;
         public MainWindow()
         {
             InitializeComponent();
             soucePathTB.DataContext = Path;
-            infoListLV.ItemsSource = ChangeInfoList;
+            infoListDG.ItemsSource = ChangeInfoList;
         }
 
         private void btn_broswer_Click(object sender, RoutedEventArgs e)
@@ -53,10 +53,11 @@ namespace FileMonitor
             }
             _monitor = new ChangeMonitor(Path.Path);
             _monitor.AddInfoEvent += addInfo;
-            infoListLV.ItemsSource = ChangeInfoList;
             _monitor.start();
             btn_start.IsEnabled = false;
             btn_stop.IsEnabled = true;
+            btn_save.IsEnabled = false;
+            btn_clear.IsEnabled = false;
 
         }
 
@@ -66,6 +67,10 @@ namespace FileMonitor
             {
                 _monitor.stop();
             }
+            btn_start.IsEnabled = true;
+            btn_stop.IsEnabled = false;
+            btn_save.IsEnabled = true;
+            btn_clear.IsEnabled = true;
         }
 
 
@@ -76,6 +81,7 @@ namespace FileMonitor
                 ChangeInfo infoItem = new ChangeInfo(type, getCurrentTime(), info);
 
                 ChangeInfoList.Add(infoItem);
+                infoListDG.ScrollIntoView(infoListDG.Items[infoListDG.Items.Count-1]);
             }));
            
         }
@@ -89,13 +95,42 @@ namespace FileMonitor
 
         private void soucePathTB_PreviewDragOver(object sender, System.Windows.DragEventArgs e)
         {
-            //e.Effects = System.Windows.DragDropEffects.Copy;
-           // e.Handled = true;
             string path = ((System.Array)e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop)).GetValue(0).ToString();
             if (Directory.Exists(path))
             {
                 Path.Path = path;
             }
+        }
+
+        private void btn_save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "text files(*.txt)|*.txt";
+            sfd.RestoreDirectory = true;
+            if(sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK || sfd.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
+            {
+                string filepath = sfd.FileName;
+                
+                using (FileStream fs = File.OpenWrite(filepath))
+                {
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+                        string info = "monitor path:" + Path.Path;
+                        writer.WriteLine(info);
+                        foreach(ChangeInfo ci in ChangeInfoList)
+                        {
+                            info = string.Format("{0} \t {1} \t {2}", ci.ChangeType, ci.ChangeTime, ci.ChangeDes);
+                            writer.WriteLine(info);
+                        }
+                        writer.Close();
+                    }
+                }
+            }
+        }
+
+        private void btn_clear_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeInfoList.Clear();
         }
     }
 }

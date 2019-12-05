@@ -5,27 +5,87 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileMonitor"
         mc:Ignorable="d"
-        Title="File Monitor" Height="600" Width="500" Name="mainwind">
+        Title="File Monitor" Height="800" Width="800" Name="mainwind" WindowStyle="ThreeDBorderWindow">
+
     <Grid ShowGridLines="False" Name="grid1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="84*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Label Content="Folder" HorizontalAlignment="Left" Margin="20,10,0,0" BorderThickness="2"  Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox x:Name="soucePathTB" Grid.Row="1" TextAlignment="Left"  HorizontalAlignment ="Center" Margin="5,5,0,0" Height="25" Width="300" PreviewDragOver="soucePathTB_PreviewDragOver" Text="{Binding Path,UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        <Button Content="broswer" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" Height="25" Width="70" Name="btn_broswer" Click="btn_broswer_Click"></Button>
-        <Button Content="start" Grid.Row="2" Height="25" Width="70" HorizontalAlignment="Left" Margin="140,5,0,0" Name="btn_start" IsEnabled="True" Click="btn_start_Click"/>
-        <Button Content="stop" Grid.Row="2" Height="25" Width="70" HorizontalAlignment="Right" Margin="0,5,140,0" Name="btn_stop" IsEnabled="False" Click="btn_stop_Click"/>
-        <ListView Name="infoListLV" Grid.Row="3" HorizontalAlignment="Left" Margin="10,10,0,0" Height="440" Width="470">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="type" Width="60" DisplayMemberBinding="{Binding ChangeType,UpdateSourceTrigger=PropertyChanged}"/>
-                    <GridViewColumn Header="time" Width="150" DisplayMemberBinding="{Binding ChangeTime,UpdateSourceTrigger=PropertyChanged}"/>
-                    <GridViewColumn Header="info" Width="250" DisplayMemberBinding="{Binding ChangeDes,UpdateSourceTrigger=PropertyChanged}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Grid Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="600"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Folder" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,20,0" BorderThickness="2"  VerticalAlignment="Top" Width="62"/>
+            <TextBox x:Name="soucePathTB" TextAlignment="Left"  HorizontalAlignment ="Right" Margin="0,10,61,5" Height="25" Width="552" PreviewDragOver="soucePathTB_PreviewDragOver" Text="{Binding Path,UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
+            <Button Content="broswer" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,40,5" Height="25" Width="70" Name="btn_broswer" Click="btn_broswer_Click" Grid.ColumnSpan="2"></Button>
+        </Grid>
+        <Grid Grid.Row="2" ShowGridLines="False" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="650"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <DataGrid Name="infoListDG" AutoGenerateColumns="False" HorizontalAlignment="Left" Margin="10,10,0,0" Height="680" Width="630" IsReadOnly="True" AlternationCount="2">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="AliceBlue"/>
+                            <Setter Property="Height" Value="25"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="#FF87B7E2"/>
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="#f2f2f2"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="type" Width="60" Binding="{Binding ChangeType}"/>
+                        <DataGridTextColumn Header="time" Width="150" Binding="{Binding ChangeTime}"/>
+                        <DataGridTextColumn Header="info" Width="auto" Binding="{Binding ChangeDes}"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Grid>
+            <Grid Grid.Column="1" ShowGridLines="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="start" Grid.Row="0" Height="25" Width="70" HorizontalAlignment="Center"  Name="btn_start" IsEnabled="True" Click="btn_start_Click"/>
+                    <Button Content="stop" Grid.Row="1" Height="25" Width="70" HorizontalAlignment="Center"  Name="btn_stop" IsEnabled="False" Click="btn_stop_Click"/>
+                    <Button Content="save" Grid.Row="3" Height="25" Width="70" HorizontalAlignment="Center"  Name="btn_save" IsEnabled="False" Click="btn_save_Click" />
+                    <Button Content="clear" Grid.Row="4" Height="25" Width="70" HorizontalAlignment="Center"  Name="btn_clear" IsEnabled="False" Click="btn_clear_Click"/>
+
+                </Grid>
+
+
+            </Grid>
+        </Grid>
+
+
+
+
+
     </Grid>
 </Window>

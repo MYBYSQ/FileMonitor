@@ -11,8 +11,6 @@ namespace FileMonitor
     {
         public delegate void AddInfoEventHandler(string type, string changeDesc);
         public event AddInfoEventHandler AddInfoEvent;
-
-        public static List<ChangeInfo> InfoList { get; } = new List<ChangeInfo>();
         private string _path = string.Empty;
         private FileSystemWatcher _watcher = null;
         public ChangeMonitor(string path)
